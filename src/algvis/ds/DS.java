@@ -55,6 +55,8 @@ import algvis.ds.trie.Trie;
 import algvis.ds.trie.TriePanel;
 import algvis.ds.unionfind.UnionFind;
 import algvis.ds.unionfind.UnionFindPanel;
+import algvis.ds.wavelettree.WaveletTree;
+import algvis.ds.wavelettree.WaveletTreePanel;
 import algvis.ui.VisPanel;
 
 public enum DS {
@@ -95,6 +97,9 @@ public enum DS {
     // Stringology
     TRIE(Trie.class, TriePanel.class), // trie
     SUFFIX_TREE(SuffixTree.class, SuffixTreePanel.class), // suffix tree
+
+    // Succinct data structures
+    WAVELET_TREE(WaveletTree.class, WaveletTreePanel.class), // wavelet tree
 
     // Amortized data structures
     DYN_ARRAY(DynamicArray.class, DynamicArrayPanel.class);

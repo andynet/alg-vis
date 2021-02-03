@@ -60,6 +60,7 @@ public class AlgVis extends JPanel implements ActionListener {
                 DS.LAZY_BIN_HEAP, DS.FIB_HEAP)), //
         sop("ufa", vec(DS.UNION_FIND)), //
         sop("stringology", vec(DS.TRIE, DS.SUFFIX_TREE)), //
+        sop("succinct", vec(DS.WAVELET_TREE)),
         sop("intervaltrees", vec(DS.INTERVAL_TREE)), //
         sop("dynamicarray", vec(DS.DYN_ARRAY)) //
     );
