@@ -1,24 +1,22 @@
 package algvis.ds.wavelettree;
 
-/* this will be WaveletTree */
-import algvis.ds.trie.Trie;
-import algvis.ds.trie.TrieButtons;
-/*  */
-
 import algvis.ui.VisPanel;
 
 public class WaveletTreePanel extends VisPanel{
+    private static final long serialVersionUID = -8652425552838569507L;
+    // WaveletTree D = new WaveletTree(this);
 
     @Override
     public void initDS() {
-        D = new Trie(this);
-        scene.add(D);
-        buttons = new TrieButtons(this);
+        // this.D = new WaveletTree(this);
+        D = new WaveletTree(this);
+        scene.add(this.D);
+        buttons = new WaveletTreeButtons(this);
     }
 
     @Override
     public void start() {
         super.start();
-        D.random(10);
+        ((WaveletTree)D).construct("mississippi");
     }
 }

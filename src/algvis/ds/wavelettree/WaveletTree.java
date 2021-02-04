@@ -2,6 +2,8 @@ package algvis.ds.wavelettree;
 
 import algvis.core.DataStructure;       // why it cannot find this?
 
+import algvis.core.WordGenerator;
+import algvis.ds.trie.TrieInsert;
 import algvis.internationalization.Languages;
 import algvis.core.StringUtils;
 import algvis.ui.VisPanel;
@@ -15,11 +17,12 @@ import java.util.ConcurrentModificationException;
 
 public class WaveletTree extends DataStructure implements ClickListener{
     public static String dsName = "wavelettree";
-    // private WaveletNode root = null;
+    private WaveletTreeNode root = null;
 
     public WaveletTree(VisPanel M) {
         super(M);
-        M.screen.V.setDS(this);
+        clear();
+        // M.screen.V.setDS(this);
     }
 
     @Override
@@ -33,28 +36,18 @@ public class WaveletTree extends DataStructure implements ClickListener{
     }
 
     @Override
-    public void insert(int x) {
-        // this is not implemented
-        // should it be in the DataStructure interface then?
-    }
-
-    @Override
     public void draw(View View) {
-        /*
-        final WaveletNode v = getRoot();
+        final WaveletTreeNode v = getRoot();
         if (v != null) {
             v.drawTree(View);
             View.drawString("\u025B", v.x, v.y - 8, Fonts.NORMAL);
         }
-        */
     }
 
     @Override
     public void clear() {
-        /*
-        root = new WaveletNode(this);
+        root = new WaveletTreeNode(this);
         root.reposition();
-         */
     }
 
     @Override
@@ -74,7 +67,26 @@ public class WaveletTree extends DataStructure implements ClickListener{
         System.out.print(y);
     }
 
+    /* helper methods */
+    public WaveletTreeNode getRoot() {
+        return this.root;
+    }
+
+    public void reposition() {
+        getRoot().reposition();
+    }
+
     /* wavelet tree related methods */
+    @Override
+    public void insert(int x) {
+        // this is not implemented
+        // should it be in the DataStructure interface then?
+    }
+
+    public void construct(String s) {
+        start(new WaveletTreeConstruct(this, s));
+    }
+
     public void access(int i){
 
     }
@@ -86,4 +98,5 @@ public class WaveletTree extends DataStructure implements ClickListener{
     public void select(int i){
 
     }
+
 }

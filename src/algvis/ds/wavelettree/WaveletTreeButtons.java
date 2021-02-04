@@ -13,9 +13,9 @@ import algvis.ui.VisPanel;
 
 public class WaveletTreeButtons extends Buttons {
     private static final long serialVersionUID = -368670840649549217L; // WTF is this
-    private IButton insertB;
-    private IButton findB;
-    private IButton deleteB;
+    private IButton accessB;
+    private IButton rankB;
+    private IButton selectB;
 
     public WaveletTreeButtons(VisPanel M) {
         super(M);
@@ -23,27 +23,27 @@ public class WaveletTreeButtons extends Buttons {
 
     @Override
     public void actionButtons(JPanel P) {
-        insertB = new IButton("button-insert");
-        insertB.setMnemonic(KeyEvent.VK_I);
-        insertB.addActionListener(this);
+        accessB = new IButton("button-access");
+        accessB.setMnemonic(KeyEvent.VK_I);
+        accessB.addActionListener(this);
 
-        findB = new IButton("button-find");
-        findB.setMnemonic(KeyEvent.VK_F);
-        findB.addActionListener(this);
+        rankB = new IButton("button-rank");
+        rankB.setMnemonic(KeyEvent.VK_F);
+        rankB.addActionListener(this);
 
-        deleteB = new IButton("button-delete");
-        deleteB.setMnemonic(KeyEvent.VK_D);
-        deleteB.addActionListener(this);
+        selectB = new IButton("button-select");
+        selectB.setMnemonic(KeyEvent.VK_D);
+        selectB.addActionListener(this);
 
-        P.add(insertB);
-        P.add(findB);
-        P.add(deleteB);
+        P.add(accessB);
+        P.add(rankB);
+        P.add(selectB);
     }
 
     @Override
     public void actionPerformed(ActionEvent evt) {
         super.actionPerformed(evt);
-        if (evt.getSource() == insertB) {
+        if (evt.getSource() == accessB) {
             final Vector<String> args = I.getVS();
             panel.history.saveEditId();
             for (final String s : args) {
@@ -52,7 +52,7 @@ public class WaveletTreeButtons extends Buttons {
             if (panel.pauses && !args.isEmpty()) {
                 panel.history.rewind();
             }
-        } else if (evt.getSource() == findB) {
+        } else if (evt.getSource() == rankB) {
             final Vector<String> args = I.getVS();
             if (args.size() > 0) {
                 panel.history.saveEditId();
@@ -63,7 +63,7 @@ public class WaveletTreeButtons extends Buttons {
                     panel.history.rewind();
                 }
             }
-        } else if (evt.getSource() == deleteB) {
+        } else if (evt.getSource() == selectB) {
             final Vector<String> args = I.getVS();
             if (args.size() > 0) {
                 panel.history.saveEditId();
@@ -80,8 +80,8 @@ public class WaveletTreeButtons extends Buttons {
     @Override
     public void setOtherEnabled(boolean enabled) {
         super.setOtherEnabled(enabled);
-        insertB.setEnabled(enabled);
-        findB.setEnabled(enabled);
-        deleteB.setEnabled(enabled);
+        accessB.setEnabled(enabled);
+        rankB.setEnabled(enabled);
+        selectB.setEnabled(enabled);
     }
 }
