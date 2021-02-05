@@ -32,6 +32,6 @@ public class TriePanel extends VisPanel {
     @Override
     public void start() {
         super.start();
-        D.random(10);
+        D.random(1);   // Why does this point to algvis.core.DataStructure.random instead of algvis.ds.Trie.random
     }
 }

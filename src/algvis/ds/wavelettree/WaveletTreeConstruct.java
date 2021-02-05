@@ -1,10 +1,15 @@
 package algvis.ds.wavelettree;
 
 import algvis.core.Algorithm;
+import algvis.core.Array;
 import algvis.core.NodeColor;
-import algvis.ds.trie.TrieNode;
-import algvis.ds.trie.TrieWordNode;
 import algvis.ui.view.REL;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.Vector;
+import java.util.stream.IntStream;
 
 public class WaveletTreeConstruct extends Algorithm {
     private final WaveletTree WT;
@@ -17,9 +22,40 @@ public class WaveletTreeConstruct extends Algorithm {
         this.s = s;
     }
 
+    Vector<Character> getAlphabet(String s) {
+        Vector<Character> result = new Vector<>();
+        for (int i = 0; i < s.length(); i++) {
+            if (!result.contains(s.charAt(i))) {
+                result.add(s.charAt(i));
+            }
+        }
+        return result;
+    }
+
+    String getBitstring(String s, List<Character> part2) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            if (part2.contains(s.charAt(i))) {
+                sb.append("1");
+            } else {
+                sb.append("0");
+            }
+        }
+        return sb.toString();
+    }
+
+    String create_part(String s, String bits, char bit) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++){
+            if (bit == bits.charAt(i)) {
+                sb.append(s.charAt(i));
+            }
+        }
+        return sb.toString();
+    }
+
     @Override
     public void runAlgorithm() {
-        // example in algvis.ds.trie.TrieInsert
         setHeader("wavelettreeconstruct", s.substring(0, s.length() - 1));
 
         WaveletTreeNode v = WT.getRoot();
@@ -33,6 +69,20 @@ public class WaveletTreeConstruct extends Algorithm {
         node.setColor(NodeColor.INSERT);
         addToScene(node);
         node.goNextTo(v);
+
+        Vector<Character> alphabet = getAlphabet(s);
+        List<Character> alphabet_part1 = alphabet.subList(0, alphabet.size()/2);
+        List<Character> alphabet_part2 = alphabet.subList(alphabet.size()/2, alphabet.size());
+        String bits = getBitstring(s, alphabet_part2);
+
+        v.setString(s);
+        v.setBits(bits);
+
+        String part1 = create_part(s, bits, '0');
+        String part2 = create_part(s, bits, '1');
+
+
+        // WaveletTreeNode w = new WaveletTreeNode(s);
 
         /*
         while (s.compareTo("$") != 0) {

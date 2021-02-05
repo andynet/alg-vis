@@ -12,7 +12,16 @@ import java.awt.*;
 
 public class WaveletTreeNode extends TreeNode {
     public String string;
+    public String bits;
     private static final int ordinaryNode = -7;     // WTF
+
+    public void setString(String text) {
+        this.string = text;
+    }
+
+    public void setBits(String bits) {
+        this.bits = bits;
+    }
 
     protected WaveletTreeNode(DataStructure D, int key, int zDepth) {
         super(D, key, zDepth);
@@ -57,17 +66,16 @@ public class WaveletTreeNode extends TreeNode {
         }
         drawBg(v);
         drawLabel(v);
-        drawArrow(v);
-        drawArc(v);
     }
 
     public void drawLabel(View v) {
         // final WaveletTreeNode u = getParent();
+
         int midx, midy, w, h;
         midx = 0; // x - ((x - u.x) / 15);
         midy = 0; // y - ((y - u.y) / 5 * 2) - 1;
-        w = 6;
-        h = 7;
+        w = string.length() * 6;
+        h = 10;
 
         v.setColor(getBgColor());
         v.fillRoundRectangle(midx, midy, w, h, 6, 10);
@@ -75,7 +83,7 @@ public class WaveletTreeNode extends TreeNode {
         v.drawRoundRectangle(midx, midy, w, h, 6, 10);
 
         v.setColor(getFgColor());
-        v.drawString(string, midx, midy - 1, Fonts.TYPEWRITER);
+        v.drawString(string + '\n' + bits, midx, midy - 1, Fonts.TYPEWRITER);
 
     }
 
