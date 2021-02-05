@@ -56,9 +56,26 @@ public class WaveletTreeConstruct extends Algorithm {
 
     @Override
     public void runAlgorithm() {
-        setHeader("wavelettreeconstruct", s.substring(0, s.length() - 1));
+        // setHeader("wavelettreeconstruct", s.substring(0, s.length() - 1));
 
         WaveletTreeNode v = WT.getRoot();
+        v.setString(s);
+
+        Vector<Character> alphabet = getAlphabet(s);
+        List<Character> alphabet_part1 = alphabet.subList(0, alphabet.size()/2);
+        List<Character> alphabet_part2 = alphabet.subList(alphabet.size()/2, alphabet.size());
+        String bits = getBitstring(s, alphabet_part2);
+        v.setBits(bits);
+
+        v.x = -15;
+        v.y = 20;
+        addToScene(v);
+
+
+        String part1 = create_part(s, bits, '0');
+        String part2 = create_part(s, bits, '1');
+
+        /*
         v.mark();
         addNote("waveletconstructnote");
         addStep(v, REL.TOP, "waveletrootstart");
@@ -70,16 +87,14 @@ public class WaveletTreeConstruct extends Algorithm {
         addToScene(node);
         node.goNextTo(v);
 
-        Vector<Character> alphabet = getAlphabet(s);
-        List<Character> alphabet_part1 = alphabet.subList(0, alphabet.size()/2);
-        List<Character> alphabet_part2 = alphabet.subList(alphabet.size()/2, alphabet.size());
-        String bits = getBitstring(s, alphabet_part2);
 
-        v.setString(s);
-        v.setBits(bits);
 
-        String part1 = create_part(s, bits, '0');
-        String part2 = create_part(s, bits, '1');
+        v.setString("kshavbdfjb");
+
+
+        addToScene(v);
+        */
+
 
 
         // WaveletTreeNode w = new WaveletTreeNode(s);
