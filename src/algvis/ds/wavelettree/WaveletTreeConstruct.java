@@ -1,12 +1,9 @@
 package algvis.ds.wavelettree;
 
 import algvis.core.Algorithm;
-import algvis.core.Array;
-import algvis.core.NodeColor;
 import algvis.ui.view.REL;
 
 import java.util.*;
-import java.util.stream.IntStream;
 
 public class WaveletTreeConstruct extends Algorithm {
     private final WaveletTree WT;
@@ -49,17 +46,20 @@ public class WaveletTreeConstruct extends Algorithm {
 
     public void createSplit(WaveletTreeNode node, String s) {
         node.setString(s);
-        pause();
         Vector<Character> alphabet = getAlphabet(s);
         if (alphabet.size() == 1) {
             node.setBits("");
             addToScene(node);
+            // addStep(node, REL.TOP, "trierootstart");
+            pause();
         } else {
             List<Character> alphabet_part1 = alphabet.subList(0, alphabet.size() / 2);
             List<Character> alphabet_part2 = alphabet.subList(alphabet.size() / 2, alphabet.size());
             String bits = getBitstring(s, alphabet_part2);
             node.setBits(bits);
             addToScene(node);
+            // addStep(node, REL.TOP, "trierootstart");
+            pause();
 
             String part1 = getPart(s, bits, '0');
             WaveletTreeNode u = new WaveletTreeNode(WT);
@@ -136,14 +136,13 @@ public class WaveletTreeConstruct extends Algorithm {
             addStep(v, REL.TOP, "trieinsertneow");
         }
         */
-        pause();
+
         /*-style graph layou
         v.setColor(NodeColor.NORMAL);
         v = v.addChild('$', node.x, node.y);
         */
 
-        WT.reposition();
-        pause();
+        // WT.reposition();
             // hw.setAndGoNextTo(s, v);
             // beforeReturn();
     }

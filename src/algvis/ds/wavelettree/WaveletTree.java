@@ -3,7 +3,9 @@ package algvis.ds.wavelettree;
 import algvis.core.DataStructure;       // why it cannot find this?
 
 import algvis.core.WordGenerator;
+import algvis.core.history.HashtableStoreSupport;
 import algvis.ds.trie.TrieInsert;
+import algvis.ds.trie.TrieNode;
 import algvis.internationalization.Languages;
 import algvis.core.StringUtils;
 import algvis.ui.VisPanel;
@@ -14,6 +16,7 @@ import algvis.ui.view.View;
 
 import java.awt.geom.Rectangle2D;
 import java.util.ConcurrentModificationException;
+import java.util.Hashtable;
 
 public class WaveletTree extends DataStructure implements ClickListener{
     public static String dsName = "wavelettree";
@@ -99,4 +102,24 @@ public class WaveletTree extends DataStructure implements ClickListener{
 
     }
 
+    @Override
+    public void storeState(Hashtable<Object, Object> state) {
+        super.storeState(state);
+        HashtableStoreSupport.store(state, hash + "root", root);
+        if (root != null) {
+            root.storeState(state);
+        }
+    }
+
+    @Override
+    public void restoreState(Hashtable<?, ?> state) {
+        super.restoreState(state);
+        final Object root = state.get(hash + "root");
+        if (root != null) {
+            this.root = (WaveletTreeNode) HashtableStoreSupport.restore(root);
+        }
+        if (this.root != null) {
+            this.root.restoreState(state);
+        }
+    }
 }
