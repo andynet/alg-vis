@@ -4,17 +4,21 @@ import algvis.core.DataStructure;
 import algvis.core.Node;
 import algvis.core.NodeColor;
 import algvis.core.TreeNode;
+import algvis.core.history.HashtableStoreSupport;
 import algvis.core.visual.ZDepth;
 import algvis.ui.Fonts;
 import algvis.ui.view.View;
 
 import java.awt.*;
 import java.util.Collections;
+import java.util.Hashtable;
 
 public class WaveletTreeNode extends TreeNode {
     public String string;
     public String bits;
     private static final int ordinaryNode = -7;     // WTF
+
+    int midx, midy, char_w, char_h, box_w, box_h;
 
     public void setString(String text) {
         this.string = text;
@@ -35,7 +39,7 @@ public class WaveletTreeNode extends TreeNode {
 
     public WaveletTreeNode(DataStructure D) {
         super(D, ordinaryNode, ZDepth.NODE);
-        this.string = "some_string";
+        this.string = " ";
     }
 
     public WaveletTreeNode(DataStructure D, String string) {
@@ -66,7 +70,6 @@ public class WaveletTreeNode extends TreeNode {
             return;
         }
 
-        int midx, midy, char_w, char_h, box_w, box_h;
         midx = x; // x - ((x - u.x) / 15);
         midy = y; // y - ((y - u.y) / 5 * 2) - 1;
         char_w = 8;
@@ -107,6 +110,31 @@ public class WaveletTreeNode extends TreeNode {
         return (WaveletTreeNode) super.getParent();
     }
 
+    @Override
+    public void reposition() {
+        if (this.getParent() == null) {
+            this.x = 0;
+            this.y = 0;
+        } else {
+            this.x = this.getParent().x + 50;
+            this.y = this.getParent().y + 50;
+        }
 
+    }
+
+    @Override
+    public void storeState(Hashtable<Object, Object> state) {
+        super.storeState(state);
+        HashtableStoreSupport.store(state, hash, string);
+    }
+
+    @Override
+    public void restoreState(Hashtable<?, ?> state) {
+        super.restoreState(state);
+        final Object ch = state.get(hash);
+        if (ch != null) {
+            this.string = (String) HashtableStoreSupport.restore(ch);
+        }
+    }
 
 }

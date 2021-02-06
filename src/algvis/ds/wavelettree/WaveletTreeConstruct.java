@@ -5,10 +5,7 @@ import algvis.core.Array;
 import algvis.core.NodeColor;
 import algvis.ui.view.REL;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-import java.util.Vector;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class WaveletTreeConstruct extends Algorithm {
@@ -22,7 +19,7 @@ public class WaveletTreeConstruct extends Algorithm {
         this.s = s;
     }
 
-    Vector<Character> getAlphabet(String s) {
+    public static Vector<Character> getAlphabet(String s) {
         Vector<Character> result = new Vector<>();
         for (int i = 0; i < s.length(); i++) {
             if (!result.contains(s.charAt(i))) {
@@ -32,19 +29,15 @@ public class WaveletTreeConstruct extends Algorithm {
         return result;
     }
 
-    String getBitstring(String s, List<Character> part2) {
+    public static String getBitstring(String s, List<Character> part2) {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < s.length(); i++) {
-            if (part2.contains(s.charAt(i))) {
-                sb.append("1");
-            } else {
-                sb.append("0");
-            }
+        for(char c : s.toCharArray()) {
+            sb.append(part2.contains(c) ? "1" : "0");
         }
         return sb.toString();
     }
 
-    String create_part(String s, String bits, char bit) {
+    public static String getPart(String s, String bits, char bit) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < s.length(); i++){
             if (bit == bits.charAt(i)) {
@@ -54,26 +47,44 @@ public class WaveletTreeConstruct extends Algorithm {
         return sb.toString();
     }
 
-    @Override
-    public void runAlgorithm() {
-        // setHeader("wavelettreeconstruct", s.substring(0, s.length() - 1));
-
-        WaveletTreeNode v = WT.getRoot();
-        v.setString(s);
-
+    public void createSplit(WaveletTreeNode node, String s) {
+        node.setString(s);
+        pause();
         Vector<Character> alphabet = getAlphabet(s);
-        List<Character> alphabet_part1 = alphabet.subList(0, alphabet.size()/2);
-        List<Character> alphabet_part2 = alphabet.subList(alphabet.size()/2, alphabet.size());
-        String bits = getBitstring(s, alphabet_part2);
-        v.setBits(bits);
+        if (alphabet.size() == 1) {
+            node.setBits("");
+            addToScene(node);
+        } else {
+            List<Character> alphabet_part1 = alphabet.subList(0, alphabet.size() / 2);
+            List<Character> alphabet_part2 = alphabet.subList(alphabet.size() / 2, alphabet.size());
+            String bits = getBitstring(s, alphabet_part2);
+            node.setBits(bits);
+            addToScene(node);
 
-        v.x = -15;
-        v.y = 20;
-        addToScene(v);
+            String part1 = getPart(s, bits, '0');
+            WaveletTreeNode u = new WaveletTreeNode(WT);
+            u.setParent(node);
+            node.setChild(u);
+            u.x = node.x - s.length() * 20;
+            u.y = node.y + 80;
+            createSplit(u, part1);
 
+            String part2 = getPart(s, bits, '1');
+            WaveletTreeNode w = new WaveletTreeNode(WT);
+            w.setParent(node);
+            u.setRight(w);
+            w.x = node.x + s.length() * 20;
+            w.y = node.y + 80;
+            createSplit(w, part2);
+        }
+    }
 
-        String part1 = create_part(s, bits, '0');
-        String part2 = create_part(s, bits, '1');
+    @Override
+    public void runAlgorithm () {
+        WaveletTreeNode v = WT.getRoot();
+        v.x = 0;
+        v.y = 0;
+        createSplit(v, s);
 
         /*
         v.mark();
@@ -96,8 +107,7 @@ public class WaveletTreeConstruct extends Algorithm {
         */
 
 
-
-        // WaveletTreeNode w = new WaveletTreeNode(s);
+            // WaveletTreeNode w = new WaveletTreeNode(s);
 
         /*
         while (s.compareTo("$") != 0) {
@@ -127,15 +137,15 @@ public class WaveletTreeConstruct extends Algorithm {
         }
         */
         pause();
-        /*
+        /*-style graph layou
         v.setColor(NodeColor.NORMAL);
         v = v.addChild('$', node.x, node.y);
         */
 
         WT.reposition();
-        // hw.setAndGoNextTo(s, v);
-        // beforeReturn();
-
-
+        pause();
+            // hw.setAndGoNextTo(s, v);
+            // beforeReturn();
     }
 }
+

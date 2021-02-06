@@ -330,8 +330,7 @@ public class TreeNode extends Node {
          * for distributing smaller subtrees.
          */
         while (RightSubtree != null) {
-            final NodePair<TreeNode> fromRightSubtree = RightSubtree
-                .fTRPrePosition();
+            final NodePair<TreeNode> fromRightSubtree = RightSubtree.fTRPrePosition();
 
             TreeNode L = LeftSubtree;
             TreeNode R = RightSubtree;
@@ -339,8 +338,7 @@ public class TreeNode extends Node {
             int roffset = RightSubtree.offset = LeftSubtree.offset;
 
             while ((L != null) && (R != null)) {
-                final int distance = (loffset + DataStructure.minsepx
-                    - roffset);
+                final int distance = (loffset + DataStructure.minsepx - roffset);
                 if (distance > 0) {
                     RightSubtree.offset += distance;
                     roffset += distance;
@@ -367,9 +365,7 @@ public class TreeNode extends Node {
                     TreeNode Elevator = L.getChild();
                     int cursep = 0;
                     while (Elevator.getParent() != LeftSubtree.getParent()) {
-                        cursep += Elevator.offset
-                            - Elevator.getParent().leftmostChild().offset
-                            - Elevator.getParent().toExtremeSon;
+                        cursep += Elevator.offset - Elevator.getParent().leftmostChild().offset - Elevator.getParent().toExtremeSon;
                         Elevator = Elevator.getParent();
                     }
 

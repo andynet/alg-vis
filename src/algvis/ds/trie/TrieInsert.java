@@ -47,8 +47,8 @@ public class TrieInsert extends Algorithm {
 
         TrieNode v = T.getRoot();
         v.mark();
-        addNote("trieinsertnote");
-        addStep(v, REL.TOP, "trierootstart");
+        addNote("trieinsertnote");              // We divide a given word into single...
+        addStep(v, REL.TOP, "trierootstart");   // We start in the root
         pause();
         v.unmark();
         hw = new TrieWordNode(T, s);
