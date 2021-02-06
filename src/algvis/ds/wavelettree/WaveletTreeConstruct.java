@@ -8,7 +8,6 @@ import java.util.*;
 public class WaveletTreeConstruct extends Algorithm {
     private final WaveletTree WT;
     private String s;
-    private WaveletTreeNode node;
 
     public WaveletTreeConstruct(WaveletTree WT, String s) {
         super(WT.panel);
@@ -81,70 +80,11 @@ public class WaveletTreeConstruct extends Algorithm {
 
     @Override
     public void runAlgorithm () {
+        pause();
         WaveletTreeNode v = WT.getRoot();
         v.x = 0;
         v.y = 0;
         createSplit(v, s);
-
-        /*
-        v.mark();
-        addNote("waveletconstructnote");
-        addStep(v, REL.TOP, "waveletrootstart");
-        pause();
-        v.unmark();
-
-        node = new WaveletTreeNode(WT, s);
-        node.setColor(NodeColor.INSERT);
-        addToScene(node);
-        node.goNextTo(v);
-
-
-
-        v.setString("kshavbdfjb");
-
-
-        addToScene(v);
-        */
-
-
-            // WaveletTreeNode w = new WaveletTreeNode(s);
-
-        /*
-        while (s.compareTo("$") != 0) {
-            final char ch = s.charAt(0);
-            node.setAndGoNextTo(s, v);
-            TrieNode w = v.getChildWithCH(ch);
-            if (w != null) {
-                addStep(v, REL.TOP, "trieinsertwch", "" + ch);
-            } else {
-                addStep(v, REL.TOP, "trieinsertwoch", "" + ch);
-                w = v.addChild(ch, node.x, node.y);
-            }
-            w.setColor(NodeColor.CACHED);
-            WT.reposition();
-            pause();
-            v = w;
-            v.setColor(NodeColor.INSERT);
-            WT.reposition();
-            s = s.substring(1);
-        }
-        node.setAndGoNextTo(s, v);
-        final TrieNode w = v.getChildWithCH('$');
-        if (w == null) {
-            addStep(v, REL.TOP, "trieinserteow");
-        } else {
-            addStep(v, REL.TOP, "trieinsertneow");
-        }
-        */
-
-        /*-style graph layou
-        v.setColor(NodeColor.NORMAL);
-        v = v.addChild('$', node.x, node.y);
-        */
-
-        // WT.reposition();
-            // hw.setAndGoNextTo(s, v);
-            // beforeReturn();
     }
 }
 

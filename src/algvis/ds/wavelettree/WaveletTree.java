@@ -1,11 +1,8 @@
 package algvis.ds.wavelettree;
 
-import algvis.core.DataStructure;       // why it cannot find this?
+import algvis.core.DataStructure;
 
-import algvis.core.WordGenerator;
 import algvis.core.history.HashtableStoreSupport;
-import algvis.ds.trie.TrieInsert;
-import algvis.ds.trie.TrieNode;
 import algvis.internationalization.Languages;
 import algvis.core.StringUtils;
 import algvis.ui.VisPanel;
@@ -25,7 +22,7 @@ public class WaveletTree extends DataStructure implements ClickListener{
     public WaveletTree(VisPanel M) {
         super(M);
         clear();
-        // M.screen.V.setDS(this);
+        M.screen.V.setDS(this);
     }
 
     @Override
@@ -40,11 +37,11 @@ public class WaveletTree extends DataStructure implements ClickListener{
 
     @Override
     public void draw(View View) {
-        final WaveletTreeNode v = getRoot();
-        if (v != null) {
-            v.drawTree(View);
-            View.drawString("\u025B", v.x, v.y - 8, Fonts.NORMAL);
-        }
+//        final WaveletTreeNode v = getRoot();
+//        if (v != null) {
+//            v.drawTree(View);
+//            // View.drawString("\u025B", v.x, v.y - 8, Fonts.NORMAL);
+//        }
     }
 
     @Override
