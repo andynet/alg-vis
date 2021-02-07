@@ -113,8 +113,12 @@ public class WaveletTree extends DataStructure {
         start(new WaveletTreeAccess(this, i));
     }
 
-    public void rank(int i){}
+    public void rank(int i){
+        start(new WaveletTreeRank(this, i));
+    }
 
-    public void select(int i){}
+    public void select(int i, char ch){
+        start(new WaveletTreeSelect(this, i, ch));
+    }
 
 }

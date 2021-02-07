@@ -50,6 +50,7 @@ public class WaveletTreeButtons extends Buttons {
         if (event.getSource() == constructB) {
             System.out.print("Construct button was pressed\n");
             String string = I.getText();
+            if (string.isEmpty()) {return; }
             ((WaveletTree) D).construct(string);
         } else if (event.getSource() == accessB) {
             System.out.print("Access button was pressed\n");
@@ -57,33 +58,27 @@ public class WaveletTreeButtons extends Buttons {
             final int index = I.getInt(stringLength / 2, 0, stringLength);
             panel.history.saveEditId();
             ((WaveletTree) D).access(index);
-//            if (panel.pauses) {
-//                panel.history.rewind();
-//            }
+            if (panel.pauses) {
+                panel.history.rewind();
+            }
         } else if (event.getSource() == rankB) {
             System.out.print("Rank button was pressed\n");
-//            final Vector<String> args = I.getVS();
-//            if (args.size() > 0) {
-//                panel.history.saveEditId();
-//                for (final String s : args) {
-//                    ((Trie) D).find(s);
-//                }
-//                if (panel.pauses) {
-//                    panel.history.rewind();
-//                }
-//            }
+            int stringLength = ((WaveletTree) D).getRoot().string.length();
+            final int index = I.getInt(stringLength / 2, 0, stringLength);
+            panel.history.saveEditId();
+            ((WaveletTree) D).rank(index);
+            if (panel.pauses) {
+                panel.history.rewind();
+            }
         } else if (event.getSource() == selectB) {
             System.out.print("Select button was pressed\n");
-//            final Vector<String> args = I.getVS();
-//            if (args.size() > 0) {
-//                panel.history.saveEditId();
-//                for (final String s : args) {
-//                    ((Trie) D).delete(s);
-//                }
-//                if (panel.pauses) {
-//                    panel.history.rewind();
-//                }
-//            }
+            int stringLength = ((WaveletTree) D).getRoot().string.length();
+            final int rank = I.getInt(stringLength / 2, 0, stringLength);
+            panel.history.saveEditId();
+            ((WaveletTree) D).select(rank, 'i');
+            if (panel.pauses) {
+                panel.history.rewind();
+            }
         }
     }
 
