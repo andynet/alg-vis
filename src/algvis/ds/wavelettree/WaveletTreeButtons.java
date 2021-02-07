@@ -53,12 +53,11 @@ public class WaveletTreeButtons extends Buttons {
             ((WaveletTree) D).construct(string);
         } else if (event.getSource() == accessB) {
             System.out.print("Access button was pressed\n");
-//            final Vector<String> args = I.getVS();
-//            panel.history.saveEditId();
-//            for (final String s : args) {
-//                ((Trie) D).insert(s);
-//            }
-//            if (panel.pauses && !args.isEmpty()) {
+            int stringLength = ((WaveletTree) D).getRoot().string.length();
+            final int index = I.getInt(stringLength / 2, 0, stringLength);
+            panel.history.saveEditId();
+            ((WaveletTree) D).access(index);
+//            if (panel.pauses) {
 //                panel.history.rewind();
 //            }
         } else if (event.getSource() == rankB) {

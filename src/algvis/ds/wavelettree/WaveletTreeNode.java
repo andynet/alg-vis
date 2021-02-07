@@ -17,6 +17,7 @@ public class WaveletTreeNode extends TreeNode {
     public String string;
     public String bits;
     private static final int ordinaryNode = -7;     // WTF
+    private int markedLetter = -1;
 
     int midx, midy, char_w, char_h, box_w, box_h;
 
@@ -28,45 +29,29 @@ public class WaveletTreeNode extends TreeNode {
         this.bits = bits;
     }
 
-    protected WaveletTreeNode(DataStructure D, int key, int zDepth) {
-        super(D, key, zDepth);
-    }
-
-    protected WaveletTreeNode(DataStructure D, int key, String string) {
-        super(D, key, ZDepth.NODE);
-        this.string = string;
-    }
-
     public WaveletTreeNode(DataStructure D) {
         super(D, ordinaryNode, ZDepth.NODE);
         this.string = " ";
     }
 
-    public WaveletTreeNode(DataStructure D, String string) {
-        super(D, ordinaryNode, ZDepth.NODE);
-        this.string = string;
-    }
-
     @Override
     public void drawTree(View v) {
-        drawGrey(v);
-        super.drawTree(v);
-    }
-
-    void drawGrey(View v) {
-        WaveletTreeNode w = getChild();
-        while (w != null) {
-            w.drawGrey(v);
-            w = w.getRight();
+        this.draw(v);
+        if (this.getChild() != null) {
+            this.getChild().drawTree(v);
+            if (this.getChild().getRight() != null) {
+                this.getChild().getRight().drawTree(v);
+            }
         }
-        if (getParent() != null) {
-            v.drawWideLine(x, y, getParent().x, getParent().y, 10.0f);
-        }
+        super.drawEdges(v);
     }
 
     @Override
     public void draw(View v) {
         if (state == Node.INVISIBLE || getKey() == NULL) {
+            return;
+        }
+        if (this.string == null || this.bits == null) {
             return;
         }
 
@@ -87,11 +72,26 @@ public class WaveletTreeNode extends TreeNode {
 
         v.setColor(getFgColor());
         for (int i = 0; i < string.length(); i++) {
-            v.drawString(string.substring(i, i+1), midx + (i * char_w) - ((string.length() / 2) * char_w) , midy - (char_h / 2.0), Fonts.TYPEWRITER);
+            int yPos = y - (char_h / 2);
+            setLetter(v, i, string, yPos);
         }
         for (int i = 0; i < bits.length(); i++) {
-            v.drawString(bits.substring(i, i+1), midx + (i * char_w) - ((bits.length() / 2) * char_w), midy + (char_h / 2.0), Fonts.TYPEWRITER);
+            int yPos = y + (char_h / 2);
+            setLetter(v, i, bits, yPos);
         }
+    }
+
+    public void setLetter(View view, int i, String s, int yPos) {
+        if (i == markedLetter) {
+            view.setColor(Color.RED);
+        } else {
+            view.setColor(getFgColor());
+        }
+        view.drawString(s.substring(i, i+1), x + (i * char_w) - ((s.length() / 2.0) * char_w), yPos, Fonts.TYPEWRITER);
+    }
+
+    public void markLetter(int i) {
+        markedLetter = i;
     }
 
 
@@ -116,10 +116,21 @@ public class WaveletTreeNode extends TreeNode {
             this.x = 0;
             this.y = 0;
         } else {
-            this.x = this.getParent().x + 50;
-            this.y = this.getParent().y + 50;
+            if ( this == this.getParent().getChild() ) {
+                // is left child
+                this.x = this.getParent().x - this.getParent().string.length() * 8;
+            } else {
+                // is right child
+                this.x = this.getParent().x + this.getParent().string.length() * 8;
+            }
+            this.y = this.getParent().y + 80;
         }
-
+        if (this.getChild() != null) {
+            this.getChild().reposition();
+            if (this.getChild().getRight() != null) {
+                this.getChild().getRight().reposition();
+            }
+        }
     }
 
     @Override

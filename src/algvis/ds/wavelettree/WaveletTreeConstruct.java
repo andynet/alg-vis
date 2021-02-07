@@ -64,18 +64,19 @@ public class WaveletTreeConstruct extends Algorithm {
             WaveletTreeNode u = new WaveletTreeNode(WT);
             u.setParent(node);
             node.setChild(u);
-            u.x = node.x - s.length() * 20;
-            u.y = node.y + 80;
+            // u.x = node.x - s.length() * 20;
+            // u.y = node.y + 80;
             createSplit(u, part1);
 
             String part2 = getPart(s, bits, '1');
             WaveletTreeNode w = new WaveletTreeNode(WT);
             w.setParent(node);
             u.setRight(w);
-            w.x = node.x + s.length() * 20;
-            w.y = node.y + 80;
+            // w.x = node.x + s.length() * 20;
+            // w.y = node.y + 80;
             createSplit(w, part2);
         }
+        node.reposition();
     }
 
     @Override

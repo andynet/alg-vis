@@ -2,7 +2,9 @@ package algvis.ds.wavelettree;
 
 import algvis.core.DataStructure;
 
+import algvis.core.WordGenerator;
 import algvis.core.history.HashtableStoreSupport;
+import algvis.ds.trie.TrieNode;
 import algvis.internationalization.Languages;
 import algvis.core.StringUtils;
 import algvis.ui.VisPanel;
@@ -15,91 +17,66 @@ import java.awt.geom.Rectangle2D;
 import java.util.ConcurrentModificationException;
 import java.util.Hashtable;
 
-public class WaveletTree extends DataStructure implements ClickListener{
+public class WaveletTree extends DataStructure {
     public static String dsName = "wavelettree";
     private WaveletTreeNode root = null;
 
+    //<editor-fold desc="things mirroring Trie">
     public WaveletTree(VisPanel M) {
         super(M);
         clear();
-        M.screen.V.setDS(this);
+        // M.screen.V.setDS(this);  // this was in bst from ClickListener
     }
 
-    @Override
+    @Override   // inherited from DataStructure
     public String getName() {
         return dsName;
     }
 
-    @Override
+    @Override   // inherited from DataStructure
     public String stats() {
         return "";
     }
 
-    @Override
-    public void draw(View View) {
-//        final WaveletTreeNode v = getRoot();
-//        if (v != null) {
-//            v.drawTree(View);
-//            // View.drawString("\u025B", v.x, v.y - 8, Fonts.NORMAL);
-//        }
-    }
-
-    @Override
-    public void clear() {
-        root = new WaveletTreeNode(this);
-        root.reposition();
-    }
-
-    @Override
-    public Rectangle2D getBoundingBox() {
-        return null;
-        // return root == null ? null : root.getBoundingBox();
-    }
-
-    @Override
-    protected void move() {
-        
-    }
-
-    @Override
-    public void mouseClicked(int x, int y) {
-        System.out.print(x);
-        System.out.print(y);
-    }
-
-    /* helper methods */
-    public WaveletTreeNode getRoot() {
-        return this.root;
-    }
-
-    public void reposition() {
-        getRoot().reposition();
-    }
-
-    /* wavelet tree related methods */
-    @Override
+    @Override   // inherited from DataStructure
     public void insert(int x) {
-        // this is not implemented
-        // should it be in the DataStructure interface then?
+        throw new java.lang.UnsupportedOperationException("Not supported.");
     }
 
-    public void construct(String s) {
-        start(new WaveletTreeConstruct(this, s));
+    @Override   // inherited from DataStructure
+    public void draw(View View) {
+        final WaveletTreeNode v = getRoot();
+        if (v != null) {
+            v.drawTree(View);
+            v.drawEdges(View);
+        }
     }
 
-    public void access(int i){
-
+    @Override   // inherited from DataStructure
+    public void clear() {
+        panel.scene.clear();
+        root = new WaveletTreeNode(this);
     }
 
-    public void rank(int i){
-
+    @Override   // inherited from DataStructure
+    public void random(int n) {
+        clear();
+        construct(WordGenerator.getWord());
     }
 
-    public void select(int i){
-
+    @Override   // inherited from VisualElement
+    public Rectangle2D getBoundingBox() {
+        return root == null ? null : root.getBoundingBox();
     }
 
-    @Override
+    @Override   // inherited from VisualElement
+    protected void move() {
+        if (root != null) {
+            root.moveTree();
+        }
+    }
+
+    @Override   // inherited from VisualElement
     public void storeState(Hashtable<Object, Object> state) {
         super.storeState(state);
         HashtableStoreSupport.store(state, hash + "root", root);
@@ -108,7 +85,7 @@ public class WaveletTree extends DataStructure implements ClickListener{
         }
     }
 
-    @Override
+    @Override   // inherited from VisualElement
     public void restoreState(Hashtable<?, ?> state) {
         super.restoreState(state);
         final Object root = state.get(hash + "root");
@@ -119,4 +96,25 @@ public class WaveletTree extends DataStructure implements ClickListener{
             this.root.restoreState(state);
         }
     }
+
+    public WaveletTreeNode getRoot() {
+        return root;
+    }
+    public void setRoot(WaveletTreeNode root) {
+        this.root = root;
+    }
+    //</editor-fold>
+
+    public void construct(String s) {
+        start(new WaveletTreeConstruct(this, s));
+    }
+
+    public void access(int i){
+        start(new WaveletTreeAccess(this, i));
+    }
+
+    public void rank(int i){}
+
+    public void select(int i){}
+
 }
