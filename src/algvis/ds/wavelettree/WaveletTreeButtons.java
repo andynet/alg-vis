@@ -54,7 +54,7 @@ public class WaveletTreeButtons extends Buttons {
             ((WaveletTree) D).construct(string);
         } else if (event.getSource() == accessB) {
             System.out.print("Access button was pressed\n");
-            int stringLength = ((WaveletTree) D).getRoot().string.length();
+            int stringLength = ((WaveletTree) D).getRoot().getString().length();
             final int index = I.getInt(stringLength / 2, 0, stringLength);
             panel.history.saveEditId();
             ((WaveletTree) D).access(index);
@@ -63,7 +63,7 @@ public class WaveletTreeButtons extends Buttons {
             }
         } else if (event.getSource() == rankB) {
             System.out.print("Rank button was pressed\n");
-            int stringLength = ((WaveletTree) D).getRoot().string.length();
+            int stringLength = ((WaveletTree) D).getRoot().getString().length();
             final int index = I.getInt(stringLength / 2, 0, stringLength);
             panel.history.saveEditId();
             ((WaveletTree) D).rank(index);
@@ -72,7 +72,7 @@ public class WaveletTreeButtons extends Buttons {
             }
         } else if (event.getSource() == selectB) {
             System.out.print("Select button was pressed\n");
-            int stringLength = ((WaveletTree) D).getRoot().string.length();
+            int stringLength = ((WaveletTree) D).getRoot().getString().length();
             final int rank = I.getInt(stringLength / 2, 0, stringLength);
             panel.history.saveEditId();
             ((WaveletTree) D).select(rank, 'i');

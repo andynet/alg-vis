@@ -64,13 +64,13 @@ public class WaveletTreeConstruct extends Algorithm {
             String part1 = getPart(s, bits, '0');
             WaveletTreeNode u = new WaveletTreeNode(WT);
             u.setParent(node);
-            node.setChild(u);
+            node.setLeftChild(u);
             createSplit(u, part1);
 
             String part2 = getPart(s, bits, '1');
             WaveletTreeNode w = new WaveletTreeNode(WT);
             w.setParent(node);
-            u.setRight(w);
+            u.setRightChild(w);
             createSplit(w, part2);
         }
     }

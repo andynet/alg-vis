@@ -16,13 +16,13 @@ public class WaveletTreeSelect extends Algorithm {
 
     public WaveletTreeNode getLeaf(char letter) {
         WaveletTreeNode node = WT.getRoot();
-        while (node.getChild() != null) {
-            int tmp = node.string.indexOf(letter);
-            char currentBit = node.bits.charAt(tmp);
+        while (node.getLeftChild() != null) {
+            int tmp = node.getString().indexOf(letter);
+            char currentBit = node.getBits().charAt(tmp);
             if (currentBit == '0') {
-                node = node.getChild();
+                node = node.getLeftChild();
             } else {
-                node = node.getChild().getRight();
+                node = node.getRightChild();
             }
         }
         return node;
@@ -47,12 +47,10 @@ public class WaveletTreeSelect extends Algorithm {
         WaveletTreeNode currentNode = getLeaf(letter);
         currentNode.markLetter(rank);
         while (currentNode.getParent() != null) {
-            if (currentNode == currentNode.getParent().getChild()) {
-                // left child
-                rank = select(currentNode.getParent().bits, rank, '0');
+            if (currentNode == currentNode.getParent().getLeftChild()) {
+                rank = select(currentNode.getParent().getBits(), rank, '0');
             } else {
-                // right child
-                rank = select(currentNode.getParent().bits, rank, '1');
+                rank = select(currentNode.getParent().getBits(), rank, '1');
             }
             currentNode = currentNode.getParent();
             currentNode.markLetter(rank);

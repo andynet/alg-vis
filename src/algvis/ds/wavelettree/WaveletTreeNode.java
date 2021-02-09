@@ -2,7 +2,6 @@ package algvis.ds.wavelettree;
 
 import algvis.core.DataStructure;
 import algvis.core.Node;
-import algvis.core.TreeNode;
 import algvis.core.history.HashtableStoreSupport;
 import algvis.core.visual.ZDepth;
 import algvis.ui.Fonts;
@@ -11,25 +10,34 @@ import algvis.ui.view.View;
 import java.awt.*;
 import java.util.Hashtable;
 
-public class WaveletTreeNode extends TreeNode {
-    public String string;
-    public String bits;
+public class WaveletTreeNode extends Node {
+    private WaveletTreeNode parent = null, leftChild = null, rightChild = null;
+    private String string, bits;
     private int markedLetter = -1;
     int char_w, char_h, box_w, box_h;
-
-    public void setString(String text) {
-        this.string = text;
-    }
-
-    public void setBits(String bits) {
-        this.bits = bits;
-    }
 
     public WaveletTreeNode(DataStructure D) {
         super(D, 0, ZDepth.NODE);
     }
 
-    @Override   // Overrides method in TreeNode
+    // <editor-fold desc="setters and getters">
+    public void setParent(WaveletTreeNode node) { this.parent = node; }
+    public WaveletTreeNode getParent() { return this.parent; }
+    public void setLeftChild(WaveletTreeNode node) { this.leftChild = node; }
+    public WaveletTreeNode getLeftChild() { return this.leftChild; }
+    public void setRightChild(WaveletTreeNode node) { this.rightChild = node; }
+    public WaveletTreeNode getRightChild() { return this.rightChild; }
+    public void setString(String string) {
+        this.string = string;
+    }
+    public String getString() { return this.string; }
+    public void setBits(String bits) {
+        this.bits = bits;
+    }
+    public String getBits() { return this.bits; }
+    // </editor-fold>
+
+    // <editor-fold desc="drawing methods">
     public void drawTree(View v) {
         drawEdges(v);
         drawNodes(v);
@@ -40,21 +48,21 @@ public class WaveletTreeNode extends TreeNode {
             view.setColor(Color.BLACK);
             view.drawLine(this.getParent().x, this.getParent().y, this.x, this.y);
         }
-        if (this.getChild() != null) {
-            this.getChild().drawEdges(view);
-            if (this.getChild().getRight() != null) {
-                this.getChild().getRight().drawEdges(view);
-            }
+        if (this.getLeftChild() != null) {
+            this.getLeftChild().drawEdges(view);
+        }
+        if (this.getRightChild() != null) {
+            this.getRightChild().drawEdges(view);
         }
     }
 
     public void drawNodes(View view) {
         this.draw(view);
-        if (this.getChild() != null) {
-            this.getChild().drawNodes(view);
-            if (this.getChild().getRight() != null) {
-                this.getChild().getRight().drawNodes(view);
-            }
+        if (this.getLeftChild() != null) {
+            this.getLeftChild().drawNodes(view);
+        }
+        if (this.getRightChild() != null) {
+            this.getRightChild().drawNodes(view);
         }
     }
 
@@ -92,66 +100,80 @@ public class WaveletTreeNode extends TreeNode {
         }
         view.drawString(s.substring(i, i+1), x + (i * char_w) - ((s.length() / 2.0) * char_w), yPos, Fonts.TYPEWRITER);
     }
+    // </editor-fold>
 
     public void markLetter(int i) {
         markedLetter = i;
     }
 
-
-    @Override   // Overrides method in TreeNode
-    public WaveletTreeNode getChild() {
-        return (WaveletTreeNode) super.getChild();
-    }
-
-    @Override   // Overrides method in TreeNode
-    public WaveletTreeNode getRight() {
-        return (WaveletTreeNode) super.getRight();
-    }
-
-    @Override   // Overrides method in TreeNode
-    public WaveletTreeNode getParent() {
-        return (WaveletTreeNode) super.getParent();
-    }
-
-    @Override   // Overrides method in TreeNode
     public void reposition() {
         if (this.getParent() == null) {
             this.x = 0;
             this.y = 0;
         } else {
-            if ( this == this.getParent().getChild() ) {
-                // is left child
+            if ( this == this.getParent().getLeftChild() ) {
                 this.x = this.getParent().x - this.getParent().string.length() * 8;
-                this.tox = this.x;
             } else {
-                // is right child
                 this.x = this.getParent().x + this.getParent().string.length() * 8;
-                this.tox = this.x;
             }
             this.y = this.getParent().y + 80;
+            this.tox = this.x;
             this.toy = this.y;
         }
-        if (this.getChild() != null) {
-            this.getChild().reposition();
-            if (this.getChild().getRight() != null) {
-                this.getChild().getRight().reposition();
-            }
+
+        if (this.getLeftChild() != null) {
+            this.getLeftChild().reposition();
+        }
+        if (this.getRightChild() != null) {
+            this.getRightChild().reposition();
         }
     }
 
-    @Override   // Overrides method in TreeNode
+    @Override   // Overrides method in Node
     public void storeState(Hashtable<Object, Object> state) {
         super.storeState(state);
-        HashtableStoreSupport.store(state, hash + "str", string);
-    }
-
-    @Override   // Overrides method in TreeNode
-    public void restoreState(Hashtable<?, ?> state) {
-        super.restoreState(state);
-        final Object ch = state.get(hash + "str");
-        if (ch != null) {
-            this.string = (String) HashtableStoreSupport.restore(ch);
+        HashtableStoreSupport.store(state, hash + "parent", parent);
+        HashtableStoreSupport.store(state, hash + "leftChild", leftChild);
+        HashtableStoreSupport.store(state, hash + "rightChild", rightChild);
+        HashtableStoreSupport.store(state, hash + "string", string);
+        HashtableStoreSupport.store(state, hash + "bits", bits);
+        if (leftChild != null) {
+            leftChild.storeState(state);
+        }
+        if (rightChild != null) {
+            rightChild.storeState(state);
         }
     }
 
+    @Override   // Overrides method in Node
+    public void restoreState(Hashtable<?, ?> state) {
+        super.restoreState(state);
+        final Object parent = state.get(hash + "parent");
+        if (parent != null) { this.parent = (WaveletTreeNode) HashtableStoreSupport.restore(parent); }
+        final Object leftChild = state.get(hash + "leftChild");
+        if (leftChild != null) { this.leftChild = (WaveletTreeNode) HashtableStoreSupport.restore(leftChild); }
+        final Object rightChild = state.get(hash + "rightChild");
+        if (rightChild != null) { this.rightChild = (WaveletTreeNode) HashtableStoreSupport.restore(rightChild); }
+        final Object string = state.get(hash + "string");
+        if (string != null) { this.string = (String) HashtableStoreSupport.restore(string); }
+        final Object bits = state.get(hash + "bits");
+        if (bits != null) { this.bits = (String) HashtableStoreSupport.restore(bits); }
+
+        if (this.leftChild != null) {
+            this.leftChild.restoreState(state);
+        }
+        if (this.rightChild != null) {
+            this.rightChild.restoreState(state);
+        }
+    }
+
+    public void moveTree() {
+        if (this.getLeftChild() != null) {
+            this.getLeftChild().moveTree();
+        }
+        if (this.getRightChild() != null) {
+            this.getRightChild().moveTree();
+        }
+        move();
+    }
 }

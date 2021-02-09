@@ -27,14 +27,14 @@ public class WaveletTreeAccess extends Algorithm {
         WaveletTreeNode currentNode = WT.getRoot();
         int currentIndex = this.index;
         currentNode.markLetter(currentIndex);
-        while (currentNode.getChild() != null) {
-            char currentBit = currentNode.bits.charAt(currentIndex);
+        while (currentNode.getLeftChild() != null) {
+            char currentBit = currentNode.getBits().charAt(currentIndex);
             if (currentBit == '0') {
-                currentIndex = rank(currentNode.bits, currentIndex, '0');
-                currentNode = currentNode.getChild();
+                currentIndex = rank(currentNode.getBits(), currentIndex, '0');
+                currentNode = currentNode.getLeftChild();
             } else {
-                currentIndex = rank(currentNode.bits, currentIndex, '1');
-                currentNode = currentNode.getChild().getRight();
+                currentIndex = rank(currentNode.getBits(), currentIndex, '1');
+                currentNode = currentNode.getRightChild();
             }
             currentNode.markLetter(currentIndex);
         }
