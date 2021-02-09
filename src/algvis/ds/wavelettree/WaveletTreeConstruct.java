@@ -48,43 +48,37 @@ public class WaveletTreeConstruct extends Algorithm {
         Vector<Character> alphabet = getAlphabet(s);
         if (alphabet.size() == 1) {
             node.setBits("");
-            addToScene(node);
             // addStep(node, REL.TOP, "trierootstart");
+            node.reposition();
             pause();
         } else {
+            Collections.sort(alphabet);
             List<Character> alphabet_part1 = alphabet.subList(0, alphabet.size() / 2);
             List<Character> alphabet_part2 = alphabet.subList(alphabet.size() / 2, alphabet.size());
             String bits = getBitstring(s, alphabet_part2);
             node.setBits(bits);
-            addToScene(node);
             // addStep(node, REL.TOP, "trierootstart");
+            node.reposition();
             pause();
 
             String part1 = getPart(s, bits, '0');
             WaveletTreeNode u = new WaveletTreeNode(WT);
             u.setParent(node);
             node.setChild(u);
-            // u.x = node.x - s.length() * 20;
-            // u.y = node.y + 80;
             createSplit(u, part1);
 
             String part2 = getPart(s, bits, '1');
             WaveletTreeNode w = new WaveletTreeNode(WT);
             w.setParent(node);
             u.setRight(w);
-            // w.x = node.x + s.length() * 20;
-            // w.y = node.y + 80;
             createSplit(w, part2);
         }
-        node.reposition();
     }
 
     @Override
     public void runAlgorithm () {
-        pause();
+        addToScene(WT);
         WaveletTreeNode v = WT.getRoot();
-        v.x = 0;
-        v.y = 0;
         createSplit(v, s);
     }
 }

@@ -16,6 +16,7 @@ import algvis.ui.view.View;
 import java.awt.geom.Rectangle2D;
 import java.util.ConcurrentModificationException;
 import java.util.Hashtable;
+import java.util.Random;
 
 public class WaveletTree extends DataStructure {
     public static String dsName = "wavelettree";
@@ -25,7 +26,6 @@ public class WaveletTree extends DataStructure {
     public WaveletTree(VisPanel M) {
         super(M);
         clear();
-        // M.screen.V.setDS(this);  // this was in bst from ClickListener
     }
 
     @Override   // inherited from DataStructure
@@ -48,7 +48,6 @@ public class WaveletTree extends DataStructure {
         final WaveletTreeNode v = getRoot();
         if (v != null) {
             v.drawTree(View);
-            v.drawEdges(View);
         }
     }
 
@@ -61,7 +60,13 @@ public class WaveletTree extends DataStructure {
     @Override   // inherited from DataStructure
     public void random(int n) {
         clear();
-        construct(WordGenerator.getWord());
+        Random random = new Random();
+        String generatedString = random
+                .ints('A', 'A' + n)
+                .limit(20)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+        construct(generatedString);
     }
 
     @Override   // inherited from VisualElement
