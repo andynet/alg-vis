@@ -1,15 +1,18 @@
 package algvis.ds.wavelettree;
 
 import algvis.core.Algorithm;
+import algvis.ui.view.REL;
 
 public class WaveletTreeRank extends Algorithm {
     private final WaveletTree WT;
     private int index;
+    private char letter;
 
-    public WaveletTreeRank(WaveletTree WT, int index) {
+    public WaveletTreeRank(WaveletTree WT, int index, char letter) {
         super(WT.panel);
         this.WT = WT;
         this.index = index;
+        this.letter = letter;
     }
 
     public static int rank(String bits, int currentIndex, char rankOf) {
@@ -24,19 +27,43 @@ public class WaveletTreeRank extends Algorithm {
 
     @Override
     public void runAlgorithm () {
-        WaveletTreeNode currentNode = WT.getRoot();
-        int currentIndex = this.index;
-        currentNode.markLetter(currentIndex);
-        while (currentNode.getLeftChild() != null) {
-            char currentBit = currentNode.getBits().charAt(currentIndex);
-            if (currentBit == '0') {
-                currentIndex = rank(currentNode.getBits(), currentIndex, '0');
-                currentNode = currentNode.getLeftChild();
-            } else {
-                currentIndex = rank(currentNode.getBits(), currentIndex, '1');
-                currentNode = currentNode.getRightChild();
+        WaveletTreeNode node = WT.getRoot();
+        node.unmarkTree();
+        addStep(node, REL.TOP, "wtrank0");
+        pause();
+
+        int index = this.index;
+        addStep(node, REL.TOP, "wtrank1");
+        pause();
+        node.setMarkedPos(index);
+        pause();
+
+        String binRepr = WT.getBinRepr(letter);
+        for (int i = 0; i < binRepr.length(); i++) {
+            if (binRepr.charAt(i) == '0') {
+                addStep(node, REL.TOP, "wtrank2_0");
+                pause();
+
+                index = rank(node.getBits(), index, '0');
+                node = node.getLeftChild();
+                addStep(node, REL.TOP, "wtrank3_0");
+                pause();
+                node.setMarkedPos(index);
+                pause();
             }
-            currentNode.markLetter(currentIndex);
+            if (binRepr.charAt(i) == '1') {
+                addStep(node, REL.TOP, "wtrank2_1");
+                pause();
+
+                index = rank(node.getBits(), index, '1');
+                node = node.getRightChild();
+                addStep(node, REL.TOP, "wtrank3_1");
+                pause();
+                node.setMarkedPos(index);
+                pause();
+            }
         }
+        addStep(node, REL.TOP, "wtrank4");
+        pause();
     }
 }

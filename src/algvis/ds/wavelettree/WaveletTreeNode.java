@@ -128,8 +128,25 @@ public class WaveletTreeNode extends Node {
     public void unmarkTree() {
         this.markedLetters.clear();
         this.markedPos = -1;
-        if (this.getLeftChild() != null) {this.getLeftChild().unmarkTree();}
-        if (this.getRightChild() != null) {this.getRightChild().unmarkTree();}
+        if (!this.isLeaf()) {
+            this.getLeftChild().unmarkTree();
+            this.getRightChild().unmarkTree();
+        }
+    }
+
+    public void getBinRepr(StringBuilder sb, char letter) {
+        int occ = this.getString().indexOf(letter);
+        if (occ != -1) {
+            char bit = this.getBits().charAt(occ);
+            if (bit == '0') {
+                sb.append(bit);
+                this.getLeftChild().getBinRepr(sb, letter);
+            }
+            if (bit == '1') {
+                sb.append(bit);
+                this.getRightChild().getBinRepr(sb, letter);
+            }
+        }
     }
 
     public boolean isLeaf() { return this.getLeftChild() == null && this.getRightChild() == null;}

@@ -110,6 +110,13 @@ public class WaveletTree extends DataStructure {
     }
     //</editor-fold>
 
+    public String getBinRepr(char letter) {
+        StringBuilder stringBuilder = new StringBuilder();
+        WaveletTreeNode root = getRoot();
+        root.getBinRepr(stringBuilder, letter);
+        return stringBuilder.toString();
+    }
+
     public void construct(String s) {
         start(new WaveletTreeConstruct(this, s));
     }
@@ -118,8 +125,8 @@ public class WaveletTree extends DataStructure {
         start(new WaveletTreeAccess(this, i));
     }
 
-    public void rank(int i){
-        start(new WaveletTreeRank(this, i));
+    public void rank(int index, char letter){
+        start(new WaveletTreeRank(this, index, letter));
     }
 
     public void select(int i, char ch){
