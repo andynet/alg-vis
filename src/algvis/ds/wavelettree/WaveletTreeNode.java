@@ -6,6 +6,7 @@ import algvis.core.history.HashtableStoreSupport;
 import algvis.core.visual.ZDepth;
 import algvis.ui.Fonts;
 import algvis.ui.view.View;
+import java.util.BitSet;
 
 import java.awt.*;
 import java.util.Hashtable;
@@ -13,8 +14,9 @@ import java.util.Hashtable;
 public class WaveletTreeNode extends Node {
     private WaveletTreeNode parent = null, leftChild = null, rightChild = null;
     private String string, bits;
-    private int markedLetter = -1;
-    int char_w = 8, char_h, box_w, box_h;
+    private BitSet markedLetters;
+    private int markedPos = -1;
+    int char_w = 10, char_h, box_w, box_h;
 
     public WaveletTreeNode(DataStructure D) {
         super(D, 0, 0, 50, ZDepth.NODE);
@@ -34,6 +36,7 @@ public class WaveletTreeNode extends Node {
     public String getString() { return this.string; }
     public void setBits(String bits) {
         this.bits = bits;
+        this.markedLetters = new BitSet(bits.length());
     }
     public String getBits() { return this.bits; }
     // </editor-fold>
@@ -82,30 +85,54 @@ public class WaveletTreeNode extends Node {
         v.setColor(Color.GRAY);
         for (int i = 0; i < string.length(); i++) {
             int yPos = y - (char_h / 2);
-            setLetter(v, i, string, yPos);
+            drawLetter(v, i, string, yPos);
         }
 
-        v.setColor(getFgColor());
         for (int i = 0; i < bits.length(); i++) {
-            if (i == markedLetter) {
+            if (markedLetters.get(i)) {
                 v.setColor(Color.RED);
             } else {
                 v.setColor(getFgColor());
             }
-            int yPos = y + (char_h / 2);
-            setLetter(v, i, bits, yPos);
+            double yPos = y + (char_h / 2.0);
+            drawLetter(v, i, bits, yPos);
         }
-
+        drawPos(v);
     }
 
-    public void setLetter(View view, int i, String s, int yPos) {
-        view.drawString(s.substring(i, i+1), x + (i * char_w) - (((s.length() - 1) / 2.0) * char_w), yPos, Fonts.TYPEWRITER);
+    public void drawLetter(View view, int i, String s, double yPos) {
+        double xPos = x + (i * char_w) - (((s.length() - 1) / 2.0) * char_w);
+        view.drawString(s.substring(i, i+1), xPos, yPos, Fonts.TYPEWRITER);
+    }
+
+    public void drawPos(View view) {
+        if (0 <= markedPos && markedPos <= string.length()) {
+            double xPos = x + (markedPos * char_w) - (((string.length()) / 2.0) * char_w);
+            double yPos = y - char_h;
+            view.drawLine(xPos, yPos, xPos, yPos + 2*char_h, 2, Color.RED);
+        }
     }
     // </editor-fold>
-
     public void markLetter(int i) {
-        markedLetter = i;
+        markedLetters.set(i);
     }
+
+    public void unmarkLetter(int i) {
+        markedLetters.clear(i);
+    }
+
+    public void setMarkedPos(int i) {
+        markedPos = i;
+    }
+
+    public void unmarkTree() {
+        this.markedLetters.clear();
+        this.markedPos = -1;
+        if (this.getLeftChild() != null) {this.getLeftChild().unmarkTree();}
+        if (this.getRightChild() != null) {this.getRightChild().unmarkTree();}
+    }
+
+    public boolean isLeaf() { return this.getLeftChild() == null && this.getRightChild() == null;}
 
     public void reposition() {
         if (this.getParent() == null) {
@@ -138,6 +165,10 @@ public class WaveletTreeNode extends Node {
         HashtableStoreSupport.store(state, hash + "rightChild", rightChild);
         HashtableStoreSupport.store(state, hash + "string", string);
         HashtableStoreSupport.store(state, hash + "bits", bits);
+        if (markedLetters != null) {
+            HashtableStoreSupport.store(state, hash + "markedLetters", markedLetters.clone());
+        }
+        HashtableStoreSupport.store(state, hash + "markedPos", markedPos);
         if (leftChild != null) {
             leftChild.storeState(state);
         }
@@ -159,6 +190,11 @@ public class WaveletTreeNode extends Node {
         if (string != null) { this.string = (String) HashtableStoreSupport.restore(string); }
         final Object bits = state.get(hash + "bits");
         if (bits != null) { this.bits = (String) HashtableStoreSupport.restore(bits); }
+        final Object markedLetters = state.get(hash + "markedLetters");
+        if (markedLetters != null) { this.markedLetters = (BitSet) HashtableStoreSupport.restore(markedLetters); }
+        final Object markedPos = state.get(hash + "markedPos");
+        if (markedPos != null) { this.markedPos = (int) HashtableStoreSupport.restore(markedPos); }
+
 
         if (this.leftChild != null) {
             this.leftChild.restoreState(state);

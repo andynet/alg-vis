@@ -94,7 +94,7 @@ public class WaveletTreeConstruct extends Algorithm {
         addToScene(WT);
         WaveletTreeNode v = WT.getRoot();
         v.reposition();
-        addStep(v, REL.TOP, "wtconstruct0", "" + s); // The string s was given
+        addStep(v, REL.TOP, "wtconstruct0");
         pause();
         createSplit(v, s);
     }
