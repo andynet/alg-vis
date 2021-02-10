@@ -14,10 +14,11 @@ public class WaveletTreeNode extends Node {
     private WaveletTreeNode parent = null, leftChild = null, rightChild = null;
     private String string, bits;
     private int markedLetter = -1;
-    int char_w, char_h, box_w, box_h;
+    int char_w = 8, char_h, box_w, box_h;
 
     public WaveletTreeNode(DataStructure D) {
-        super(D, 0, ZDepth.NODE);
+        super(D, 0, 0, 50, ZDepth.NODE);
+        char_h = Fonts.TYPEWRITER.fm.getHeight();
     }
 
     // <editor-fold desc="setters and getters">
@@ -72,20 +73,25 @@ public class WaveletTreeNode extends Node {
             return;
         }
 
-        char_w = 8;
-        char_h = Fonts.TYPEWRITER.fm.getHeight();
-        box_w = string.length() * char_w;
-        box_h = (int) (1.5 * char_h);
+        box_w = string.length() * char_w / 2;
+        box_h = char_h;
 
         v.setColor(Color.WHITE);
         v.fillRoundRectangle(x, y, box_w, box_h, 6, 10);
 
-        v.setColor(getFgColor());
+        v.setColor(Color.GRAY);
         for (int i = 0; i < string.length(); i++) {
             int yPos = y - (char_h / 2);
             setLetter(v, i, string, yPos);
         }
+
+        v.setColor(getFgColor());
         for (int i = 0; i < bits.length(); i++) {
+            if (i == markedLetter) {
+                v.setColor(Color.RED);
+            } else {
+                v.setColor(getFgColor());
+            }
             int yPos = y + (char_h / 2);
             setLetter(v, i, bits, yPos);
         }
@@ -93,12 +99,7 @@ public class WaveletTreeNode extends Node {
     }
 
     public void setLetter(View view, int i, String s, int yPos) {
-        if (i == markedLetter) {
-            view.setColor(Color.RED);
-        } else {
-            view.setColor(getFgColor());
-        }
-        view.drawString(s.substring(i, i+1), x + (i * char_w) - ((s.length() / 2.0) * char_w), yPos, Fonts.TYPEWRITER);
+        view.drawString(s.substring(i, i+1), x + (i * char_w) - (((s.length() - 1) / 2.0) * char_w), yPos, Fonts.TYPEWRITER);
     }
     // </editor-fold>
 
@@ -108,15 +109,15 @@ public class WaveletTreeNode extends Node {
 
     public void reposition() {
         if (this.getParent() == null) {
-            this.x = 0;
-            this.y = 0;
+            this.x = tox = 0;
+            this.y = toy = 100;
         } else {
             if ( this == this.getParent().getLeftChild() ) {
-                this.x = this.getParent().x - this.getParent().string.length() * 8;
+                this.x = this.getParent().x - this.getParent().string.length() * char_w / 2;
             } else {
-                this.x = this.getParent().x + this.getParent().string.length() * 8;
+                this.x = this.getParent().x + this.getParent().string.length() * char_w / 2;
             }
-            this.y = this.getParent().y + 80;
+            this.y = this.getParent().y + char_h * 6;
             this.tox = this.x;
             this.toy = this.y;
         }

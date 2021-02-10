@@ -51,7 +51,11 @@ public class WaveletTreeButtons extends Buttons {
             System.out.print("Construct button was pressed\n");
             String string = I.getText();
             if (string.isEmpty()) {return; }
+            panel.history.saveEditId();
             ((WaveletTree) D).construct(string);
+            if (panel.pauses) {
+                panel.history.rewind();
+            }
         } else if (event.getSource() == accessB) {
             System.out.print("Access button was pressed\n");
             int stringLength = ((WaveletTree) D).getRoot().getString().length();

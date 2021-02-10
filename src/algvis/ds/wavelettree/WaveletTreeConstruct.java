@@ -45,40 +45,57 @@ public class WaveletTreeConstruct extends Algorithm {
 
     public void createSplit(WaveletTreeNode node, String s) {
         node.setString(s);
+        node.setBits("");
+        node.reposition();
+        addStep(node, REL.TOP, "wtconstruct1");    // Create a node representing string
+        pause();
+
         Vector<Character> alphabet = getAlphabet(s);
         if (alphabet.size() == 1) {
-            node.setBits("");
-            // addStep(node, REL.TOP, "trierootstart");
+            node.setString(s);
+            node.setBits(alphabet.get(0).toString());
             node.reposition();
+            addStep(node, REL.TOP, "wtconstruct2");    // The node contains only one letter, therefore it is a leaf.
             pause();
         } else {
             Collections.sort(alphabet);
-            List<Character> alphabet_part1 = alphabet.subList(0, alphabet.size() / 2);
             List<Character> alphabet_part2 = alphabet.subList(alphabet.size() / 2, alphabet.size());
             String bits = getBitstring(s, alphabet_part2);
             node.setBits(bits);
-            // addStep(node, REL.TOP, "trierootstart");
             node.reposition();
+            addStep(node, REL.TOP, "wtconstruct3");     // Split the alphabet to 2 parts. Construct a bitvector by assigning 0 to letters from first part and 1 to letters from second part.
             pause();
 
             String part1 = getPart(s, bits, '0');
             WaveletTreeNode u = new WaveletTreeNode(WT);
             u.setParent(node);
             node.setLeftChild(u);
+
+            u.reposition();
+            addStep(u, REL.TOP, "wtconstruct4");    // Letters from first part go left.
+            pause();
             createSplit(u, part1);
 
             String part2 = getPart(s, bits, '1');
             WaveletTreeNode w = new WaveletTreeNode(WT);
             w.setParent(node);
-            u.setRightChild(w);
+            node.setRightChild(w);
+
+            w.reposition();
+            addStep(w, REL.TOP, "wtconstruct5");    // Letters from second part go right
+            pause();
             createSplit(w, part2);
         }
     }
 
     @Override
     public void runAlgorithm () {
+        WT.clear();
         addToScene(WT);
         WaveletTreeNode v = WT.getRoot();
+        v.reposition();
+        addStep(v, REL.TOP, "wtconstruct0", "" + s); // The string s was given
+        pause();
         createSplit(v, s);
     }
 }
