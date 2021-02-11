@@ -77,10 +77,11 @@ public class WaveletTreeButtons extends Buttons {
             }
         } else if (event.getSource() == selectB) {
             System.out.print("Select button was pressed\n");
-            int stringLength = ((WaveletTree) D).getRoot().getString().length();
-            final int rank = I.getInt(stringLength / 2, 0, stringLength);
+            final String[] args = I.getText().split(" ");
+            int rank = Integer.parseInt(args[0]);
+            char letter = args[1].charAt(0);
             panel.history.saveEditId();
-            ((WaveletTree) D).select(rank, 'i');
+            ((WaveletTree) D).select(rank, letter);
             if (panel.pauses) {
                 panel.history.rewind();
             }
