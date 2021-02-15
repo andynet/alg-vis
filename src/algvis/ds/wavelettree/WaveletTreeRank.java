@@ -53,12 +53,12 @@ public class WaveletTreeRank extends Algorithm {
                 index = nextIndex;
             }
             if (binRepr.charAt(i) == '1') {
-                addStep(node, REL.TOP, "wtrank2", "" + this.letter, "0", "left");
+                addStep(node, REL.TOP, "wtrank2", "" + this.letter, "1", "right");
                 pause();
 
                 int nextIndex = rank(node.getBits(), index, '1');
                 node = node.getRightChild();
-                addStep(node, REL.TOP, "wtaccess3", "" + nextIndex, "0", "" + index);
+                addStep(node, REL.TOP, "wtaccess3", "" + nextIndex, "1", "" + index);
                 pause();
                 node.setMarkedPos(nextIndex);
                 pause();

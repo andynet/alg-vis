@@ -14,9 +14,7 @@ import algvis.ui.view.Layout;
 import algvis.ui.view.View;
 
 import java.awt.geom.Rectangle2D;
-import java.util.ConcurrentModificationException;
-import java.util.Hashtable;
-import java.util.Random;
+import java.util.*;
 
 public class WaveletTree extends DataStructure {
     public static String dsName = "wavelettree";
@@ -44,10 +42,22 @@ public class WaveletTree extends DataStructure {
     }
 
     @Override   // inherited from DataStructure
-    public void draw(View View) {
+    public void draw(View view) {
         final WaveletTreeNode v = getRoot();
         if (v != null) {
-            v.drawTree(View);
+            v.drawTree(view);
+            drawRepr(view);
+        }
+    }
+
+    public void drawRepr(View view) {
+        final WaveletTreeNode v = getRoot();
+        double xPos = v.tox - (v.getString().length() + 10) * v.char_w, yPos = v.toy - v.char_h / 2.0;
+        Vector<Character> alphabet = WaveletTreeConstruct.getAlphabet(v.getString());
+        Collections.sort(alphabet);
+        for(Character c : alphabet) {
+            view.drawString(c.toString() + ": " + getBinRepr(c), xPos, yPos, Fonts.TYPEWRITER);
+            yPos += v.char_h;
         }
     }
 
