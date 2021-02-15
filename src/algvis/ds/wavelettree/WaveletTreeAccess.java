@@ -26,7 +26,7 @@ public class WaveletTreeAccess extends Algorithm {
     public void walkDown(WaveletTreeNode node, int pos) {
         if (node.isLeaf()) {
             node.markLetter(0);
-            addStep(node, REL.TOP, "wtaccess4");
+            addStep(node, REL.TOP, "wtaccess4", "" + node.getString().charAt(pos));
             pause();
             node.unmarkLetter(0);
         } else {
@@ -43,9 +43,10 @@ public class WaveletTreeAccess extends Algorithm {
                 WaveletTreeNode nextNode = node.getLeftChild();
                 int nextPos = rank(node.getBits(), pos, '0');
                 if (!nextNode.isLeaf()) {
-                    node.setMarkedPos(pos + 1);
-                    addStep(nextNode, REL.TOP, "wtaccess3_0");
+                    node.setMarkedPos(pos);
+                    addStep(nextNode, REL.TOP, "wtaccess3", "" + nextPos, "0", "" + pos);
                     pause();
+                    node.setMarkedPos(-1);
                 }
                 walkDown(nextNode, nextPos);
             } else {
@@ -56,9 +57,10 @@ public class WaveletTreeAccess extends Algorithm {
                 WaveletTreeNode nextNode = node.getRightChild();
                 int nextPos = rank(node.getBits(), pos, '1');
                 if (!nextNode.isLeaf()) {
-                    node.setMarkedPos(pos + 1);
-                    addStep(nextNode, REL.TOP, "wtaccess3_1");
+                    node.setMarkedPos(pos);
+                    addStep(nextNode, REL.TOP, "wtaccess3", "" + nextPos, "0", "" + pos);
                     pause();
+                    node.setMarkedPos(-1);
                 }
                 walkDown(nextNode, nextPos);
             }

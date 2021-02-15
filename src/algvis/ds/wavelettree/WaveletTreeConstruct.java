@@ -55,7 +55,7 @@ public class WaveletTreeConstruct extends Algorithm {
             node.setString(s);
             node.setBits(alphabet.get(0).toString());
             node.reposition();
-            addStep(node, REL.TOP, "wtconstruct2");    // The node contains only one letter, therefore it is a leaf.
+            addStep(node, REL.TOP, "wtconstruct2", alphabet.get(0).toString());    // The node contains letter #1, therefore it is a leaf.
             pause();
         } else {
             Collections.sort(alphabet);
@@ -94,7 +94,7 @@ public class WaveletTreeConstruct extends Algorithm {
         addToScene(WT);
         WaveletTreeNode v = WT.getRoot();
         v.reposition();
-        addStep(v, REL.TOP, "wtconstruct0");
+        addStep(v, REL.TOP, "wtconstruct0", s);
         pause();
         createSplit(v, s);
     }

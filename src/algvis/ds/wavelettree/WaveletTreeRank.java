@@ -29,41 +29,45 @@ public class WaveletTreeRank extends Algorithm {
     public void runAlgorithm () {
         WaveletTreeNode node = WT.getRoot();
         node.unmarkTree();
-        addStep(node, REL.TOP, "wtrank0");
+        addStep(node, REL.TOP, "wtrank0", "" + this.letter, "" + this.index, WT.getBinRepr(this.letter));
         pause();
 
         int index = this.index;
-        addStep(node, REL.TOP, "wtrank1");
-        pause();
+        addStep(node, REL.TOP, "wtrank1", "" + index);
         node.setMarkedPos(index);
         pause();
 
         String binRepr = WT.getBinRepr(letter);
         for (int i = 0; i < binRepr.length(); i++) {
             if (binRepr.charAt(i) == '0') {
-                addStep(node, REL.TOP, "wtrank2_0");
+                addStep(node, REL.TOP, "wtrank2", "" + this.letter, "0", "left");
                 pause();
 
-                index = rank(node.getBits(), index, '0');
+                int nextIndex = rank(node.getBits(), index, '0');
                 node = node.getLeftChild();
-                addStep(node, REL.TOP, "wtrank3_0");
+                addStep(node, REL.TOP, "wtaccess3", "" + nextIndex, "0", "" + index);
                 pause();
-                node.setMarkedPos(index);
+                node.setMarkedPos(nextIndex);
                 pause();
+                node.getParent().setMarkedPos(-1);
+                index = nextIndex;
             }
             if (binRepr.charAt(i) == '1') {
-                addStep(node, REL.TOP, "wtrank2_1");
+                addStep(node, REL.TOP, "wtrank2", "" + this.letter, "0", "left");
                 pause();
 
-                index = rank(node.getBits(), index, '1');
+                int nextIndex = rank(node.getBits(), index, '1');
                 node = node.getRightChild();
-                addStep(node, REL.TOP, "wtrank3_1");
+                addStep(node, REL.TOP, "wtaccess3", "" + nextIndex, "0", "" + index);
                 pause();
-                node.setMarkedPos(index);
+                node.setMarkedPos(nextIndex);
                 pause();
+                node.getParent().setMarkedPos(-1);
+                index = nextIndex;
             }
         }
-        addStep(node, REL.TOP, "wtrank4");
+        addStep(node, REL.TOP, "wtrank4", "" + this.letter, "" + this.index, "" + index);
         pause();
+        node.setMarkedPos(-1);
     }
 }

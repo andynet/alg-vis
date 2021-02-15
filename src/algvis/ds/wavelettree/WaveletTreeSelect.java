@@ -46,30 +46,38 @@ public class WaveletTreeSelect extends Algorithm {
     public void runAlgorithm () {
         // start at the bottom
         WaveletTreeNode node = getLeaf(letter);
-        addStep(node, REL.TOP, "wtselect0");    // We start at the leaf representing the letter
+        int rank = this.rank;
+        node.setMarkedPos(rank);
+        addStep(node, REL.TOP, "wtselect0", "" + letter);    // We start at the leaf representing the letter
         pause();
 
-        // String repr = WT.getBinRepr(letter);
         while (node.getParent() != null) {
             if (node == node.getParent().getLeftChild()) {
-                addStep(node, REL.TOP, "wtselect1_0");    // Corresponding bit was 0.
+                addStep(node, REL.TOP, "wtselect1", "left", "0");    // This is the #1 child with corresponding bit was #2.
                 pause();
-                rank = select(node.getParent().getBits(), rank, '0');
-                node.getParent().setMarkedPos(rank);
-                addStep(node, REL.TOP, "wtselect2_0");    // Next position is the rank of 0 in the parent node
+                int nextRank = select(node.getParent().getBits(), rank, '0');
+                node.getParent().setMarkedPos(nextRank);
+                addStep(node, REL.TOP, "wtselect2", "" + nextRank, "0", "" + rank);
+                // Next position is #1, the select of #2 bit with rank #3 in the parent node
                 pause();
+                rank = nextRank;
+                node.setMarkedPos(-1);
             } else {
-                addStep(node, REL.TOP, "wtselect1_1");    // Corresponding bit was 1.
+                addStep(node, REL.TOP, "wtselect1", "right", "1");
                 pause();
-                rank = select(node.getParent().getBits(), rank, '1');
-                node.getParent().setMarkedPos(rank);
-                addStep(node, REL.TOP, "wtselect2_1");    // Next position is the rank of 1 in the parent node
+                int nextRank = select(node.getParent().getBits(), rank, '1');
+                node.getParent().setMarkedPos(nextRank);
+                addStep(node, REL.TOP, "wtselect2", "" + nextRank, "1", "" + rank);
                 pause();
+                rank = nextRank;
+                node.setMarkedPos(-1);
             }
             node = node.getParent();
         }
         node.markLetter(rank);
-        addStep(node, REL.TOP, "wtselect3");    // We return the marked position
+        addStep(node, REL.TOP, "wtselect3", "" + rank);
         pause();
+        node.unmarkLetter(rank);
+        node.setMarkedPos(-1);
     }
 }
