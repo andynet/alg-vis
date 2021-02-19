@@ -13,6 +13,7 @@ import algvis.ui.VisPanel;
 public class WaveletTreeButtons extends Buttons {
     private static final long serialVersionUID = -368670840649549217L; // WTF is this
     private IButton constructB;
+    private IButton huffConstructB;
     private IButton accessB;
     private IButton rankB;
     private IButton selectB;
@@ -27,6 +28,11 @@ public class WaveletTreeButtons extends Buttons {
         constructB.setMnemonic(KeyEvent.VK_C);
         constructB.addActionListener(this);
         P.add(constructB);
+
+        huffConstructB = new IButton("button-huff-construct");
+        huffConstructB.setMnemonic(KeyEvent.VK_H);
+        huffConstructB.addActionListener(this);
+        P.add(huffConstructB);
 
         accessB = new IButton("button-access");
         accessB.setMnemonic(KeyEvent.VK_A);
@@ -56,6 +62,12 @@ public class WaveletTreeButtons extends Buttons {
             if (panel.pauses) {
                 panel.history.rewind();
             }
+        } else if (event.getSource() == huffConstructB) {
+            System.out.print("Construct button was pressed\n");
+            String string = I.getText();
+            if (string.isEmpty()) {return; }
+            panel.history.saveEditId();
+            ((WaveletTree) D).huffConstruct(string);
         } else if (event.getSource() == accessB) {
             System.out.print("Access button was pressed\n");
             int stringLength = ((WaveletTree) D).getRoot().getString().length();
@@ -92,6 +104,7 @@ public class WaveletTreeButtons extends Buttons {
     public void setOtherEnabled(boolean enabled) {
         super.setOtherEnabled(enabled);
         constructB.setEnabled(enabled);
+        huffConstructB.setEnabled(enabled);
         accessB.setEnabled(enabled);
         rankB.setEnabled(enabled);
         selectB.setEnabled(enabled);

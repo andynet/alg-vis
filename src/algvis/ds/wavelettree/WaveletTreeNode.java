@@ -23,6 +23,13 @@ public class WaveletTreeNode extends Node {
         char_h = Fonts.TYPEWRITER.fm.getHeight();
     }
 
+    public WaveletTreeNode(DataStructure D, String string, String bits, int x, int y) {
+        super(D, 0, x, y, ZDepth.NODE);
+        char_h = Fonts.TYPEWRITER.fm.getHeight();
+        this.string = string;
+        setBits(bits);
+    }
+
     // <editor-fold desc="setters and getters">
     public void setParent(WaveletTreeNode node) { this.parent = node; }
     public WaveletTreeNode getParent() { return this.parent; }
@@ -152,18 +159,16 @@ public class WaveletTreeNode extends Node {
     public boolean isLeaf() { return this.getLeftChild() == null && this.getRightChild() == null;}
 
     public void reposition() {
-        if (this.getParent() == null) {
-            this.x = tox = 0;
-            this.y = toy = 100;
-        } else {
+        if (this.getParent() != null) {
             if ( this == this.getParent().getLeftChild() ) {
+                this.tox = this.getParent().tox - this.getParent().string.length() * char_w / 2;
                 this.x = this.getParent().x - this.getParent().string.length() * char_w / 2;
             } else {
+                this.tox = this.getParent().tox + this.getParent().string.length() * char_w / 2;
                 this.x = this.getParent().x + this.getParent().string.length() * char_w / 2;
             }
+            this.toy = this.getParent().toy + char_h * 6;
             this.y = this.getParent().y + char_h * 6;
-            this.tox = this.x;
-            this.toy = this.y;
         }
 
         if (this.getLeftChild() != null) {

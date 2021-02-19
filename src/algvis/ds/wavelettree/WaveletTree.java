@@ -2,9 +2,7 @@ package algvis.ds.wavelettree;
 
 import algvis.core.DataStructure;
 
-import algvis.core.WordGenerator;
 import algvis.core.history.HashtableStoreSupport;
-import algvis.ds.trie.TrieNode;
 import algvis.internationalization.Languages;
 import algvis.core.StringUtils;
 import algvis.ui.VisPanel;
@@ -23,7 +21,17 @@ public class WaveletTree extends DataStructure {
     //<editor-fold desc="things mirroring Trie">
     public WaveletTree(VisPanel M) {
         super(M);
-        clear();
+        root = new WaveletTreeNode(this);
+        // clear();
+    }
+
+    public WaveletTree(VisPanel M, int tox, int toy) {
+        super(M);
+        root = new WaveletTreeNode(this);
+        this.root.x = tox;
+        this.root.y = toy;
+        this.root.tox = tox;
+        this.root.toy = toy;
     }
 
     @Override   // inherited from DataStructure
@@ -46,14 +54,15 @@ public class WaveletTree extends DataStructure {
         final WaveletTreeNode v = getRoot();
         if (v != null) {
             v.drawTree(view);
-            drawRepr(view);
+            // drawRepr(view);
         }
     }
 
     public void drawRepr(View view) {
         final WaveletTreeNode v = getRoot();
+        if (v.getString() == null) {return;}
         double xPos = v.tox - (v.getString().length() + 10) * v.char_w, yPos = v.toy - v.char_h / 2.0;
-        Vector<Character> alphabet = WaveletTreeConstruct.getAlphabet(v.getString());
+        Vector<Character> alphabet = WTUtil.getAlphabet(v.getString());
         Collections.sort(alphabet);
         for(Character c : alphabet) {
             view.drawString(c.toString() + ": " + getBinRepr(c), xPos, yPos, Fonts.TYPEWRITER);
@@ -123,6 +132,7 @@ public class WaveletTree extends DataStructure {
     public String getBinRepr(char letter) {
         StringBuilder stringBuilder = new StringBuilder();
         WaveletTreeNode root = getRoot();
+        if (root.getString() == null) {return "";}
         root.getBinRepr(stringBuilder, letter);
         return stringBuilder.toString();
     }
@@ -130,6 +140,7 @@ public class WaveletTree extends DataStructure {
     public void construct(String s) {
         start(new WaveletTreeConstruct(this, s));
     }
+    public void huffConstruct(String s) {start(new WaveletTreeHuffmanConstruct(this, s)); }
 
     public void access(int i){
         start(new WaveletTreeAccess(this, i));
@@ -142,5 +153,6 @@ public class WaveletTree extends DataStructure {
     public void select(int i, char ch){
         start(new WaveletTreeSelect(this, i, ch));
     }
+
 
 }

@@ -15,34 +15,6 @@ public class WaveletTreeConstruct extends Algorithm {
         this.s = s;
     }
 
-    public static Vector<Character> getAlphabet(String s) {
-        Vector<Character> result = new Vector<>();
-        for (int i = 0; i < s.length(); i++) {
-            if (!result.contains(s.charAt(i))) {
-                result.add(s.charAt(i));
-            }
-        }
-        return result;
-    }
-
-    public static String getBitstring(String s, List<Character> part2) {
-        StringBuilder sb = new StringBuilder();
-        for(char c : s.toCharArray()) {
-            sb.append(part2.contains(c) ? "1" : "0");
-        }
-        return sb.toString();
-    }
-
-    public static String getPart(String s, String bits, char bit) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < s.length(); i++){
-            if (bit == bits.charAt(i)) {
-                sb.append(s.charAt(i));
-            }
-        }
-        return sb.toString();
-    }
-
     public void createSplit(WaveletTreeNode node, String s) {
         node.setString(s);
         node.setBits("");
@@ -50,7 +22,7 @@ public class WaveletTreeConstruct extends Algorithm {
         addStep(node, REL.TOP, "wtconstruct1");    // Create a node representing string
         pause();
 
-        Vector<Character> alphabet = getAlphabet(s);
+        Vector<Character> alphabet = WTUtil.getAlphabet(s);
         if (alphabet.size() == 1) {
             node.setString(s);
             node.setBits(alphabet.get(0).toString());
@@ -60,13 +32,13 @@ public class WaveletTreeConstruct extends Algorithm {
         } else {
             Collections.sort(alphabet);
             List<Character> alphabet_part2 = alphabet.subList(alphabet.size() / 2, alphabet.size());
-            String bits = getBitstring(s, alphabet_part2);
+            String bits = WTUtil.getBitstring(s, alphabet_part2);
             node.setBits(bits);
             node.reposition();
             addStep(node, REL.TOP, "wtconstruct3");     // Split the alphabet to 2 parts. Construct a bitvector by assigning 0 to letters from first part and 1 to letters from second part.
             pause();
 
-            String part1 = getPart(s, bits, '0');
+            String part1 = WTUtil.getPart(s, bits, '0');
             WaveletTreeNode u = new WaveletTreeNode(WT);
             u.setParent(node);
             node.setLeftChild(u);
@@ -76,7 +48,7 @@ public class WaveletTreeConstruct extends Algorithm {
             pause();
             createSplit(u, part1);
 
-            String part2 = getPart(s, bits, '1');
+            String part2 = WTUtil.getPart(s, bits, '1');
             WaveletTreeNode w = new WaveletTreeNode(WT);
             w.setParent(node);
             node.setRightChild(w);
