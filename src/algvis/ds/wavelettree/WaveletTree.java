@@ -17,6 +17,7 @@ import java.util.*;
 public class WaveletTree extends DataStructure {
     public static String dsName = "wavelettree";
     private WaveletTreeNode root = null;
+    boolean completed = false;
 
     //<editor-fold desc="things mirroring Trie">
     public WaveletTree(VisPanel M) {
@@ -54,7 +55,9 @@ public class WaveletTree extends DataStructure {
         final WaveletTreeNode v = getRoot();
         if (v != null) {
             v.drawTree(view);
-            // drawRepr(view);
+            if (completed) {
+                drawRepr(view);
+            }
         }
     }
 
@@ -65,7 +68,7 @@ public class WaveletTree extends DataStructure {
         Vector<Character> alphabet = WTUtil.getAlphabet(v.getString());
         Collections.sort(alphabet);
         for(Character c : alphabet) {
-            view.drawString(c.toString() + ": " + getBinRepr(c), xPos, yPos, Fonts.TYPEWRITER);
+            view.getGraphics().drawString(c.toString() + ": " + this.getBinRepr(c), (int) xPos, (int) yPos);
             yPos += v.char_h;
         }
     }
@@ -74,6 +77,7 @@ public class WaveletTree extends DataStructure {
     public void clear() {
         panel.scene.clear();
         root = new WaveletTreeNode(this);
+        completed = false;
     }
 
     @Override   // inherited from DataStructure
@@ -104,6 +108,7 @@ public class WaveletTree extends DataStructure {
     public void storeState(Hashtable<Object, Object> state) {
         super.storeState(state);
         HashtableStoreSupport.store(state, hash + "root", root);
+        HashtableStoreSupport.store(state, hash + "completed", completed);
         if (root != null) {
             root.storeState(state);
         }
@@ -116,6 +121,11 @@ public class WaveletTree extends DataStructure {
         if (root != null) {
             this.root = (WaveletTreeNode) HashtableStoreSupport.restore(root);
         }
+        final Object completed = state.get(hash + "completed");
+        if (completed != null) {
+            this.completed = (boolean) HashtableStoreSupport.restore(completed);
+        }
+
         if (this.root != null) {
             this.root.restoreState(state);
         }
@@ -133,6 +143,7 @@ public class WaveletTree extends DataStructure {
         StringBuilder stringBuilder = new StringBuilder();
         WaveletTreeNode root = getRoot();
         if (root.getString() == null) {return "";}
+        if (root.getBits() == null) {return "";}
         root.getBinRepr(stringBuilder, letter);
         return stringBuilder.toString();
     }

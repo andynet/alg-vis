@@ -56,7 +56,9 @@ public class WaveletTreeButtons extends Buttons {
         if (event.getSource() == constructB) {
             System.out.print("Construct button was pressed\n");
             String string = I.getText();
-            if (string.isEmpty()) {return; }
+            if (string.isEmpty()) {
+                string = ((WaveletTree) D).getRoot().getString();
+            }
             panel.history.saveEditId();
             ((WaveletTree) D).construct(string);
             if (panel.pauses) {
@@ -65,9 +67,14 @@ public class WaveletTreeButtons extends Buttons {
         } else if (event.getSource() == huffConstructB) {
             System.out.print("Construct button was pressed\n");
             String string = I.getText();
-            if (string.isEmpty()) {return; }
+            if (string.isEmpty()) {
+                string = ((WaveletTree) D).getRoot().getString();
+            }
             panel.history.saveEditId();
             ((WaveletTree) D).huffConstruct(string);
+            if (panel.pauses) {
+                panel.history.rewind();
+            }
         } else if (event.getSource() == accessB) {
             System.out.print("Access button was pressed\n");
             int stringLength = ((WaveletTree) D).getRoot().getString().length();

@@ -42,13 +42,19 @@ public class WaveletTreeHuffmanConstruct extends Algorithm {
 
     public void positionTrees(List<WaveletTree> trees){
         int x = 0;
-        int y = 100;
+        for (WaveletTree tree: trees) {
+            WaveletTreeNode root = tree.getRoot();
+            x -= root.getString().length() * root.char_h * 1.5;
+        }
+        x /= 2;
+        int y = 70;
         for (WaveletTree tree : trees) {
             WaveletTreeNode root = tree.getRoot();
+            x += root.getString().length() * root.char_h * 0.75;
             root.tox = root.x = x;
             root.toy = root.y = y;
+            x += root.getString().length() * root.char_h * 0.75;
             root.reposition();
-            x += root.getString().length() * root.char_h;
         }
     }
 
@@ -100,6 +106,7 @@ public class WaveletTreeHuffmanConstruct extends Algorithm {
     @Override
     public void runAlgorithm () {
         WT.clear();
+        addToScene(WT);
         Map<String, Integer> charFreqs = getCharFreq(s);
         Map<String, WaveletTree> stringToTree = new HashMap<>();
 
@@ -146,8 +153,10 @@ public class WaveletTreeHuffmanConstruct extends Algorithm {
             positionTrees(new ArrayList<>(stringToTree.values()));
             pause();
         }
+        removeFromScene(newTree);
         WT.setRoot(newTree.getRoot());
-        positionTrees(new ArrayList<>(stringToTree.values()));
+        WT.getRoot().reposition();
+        WT.completed = true;
         pause();
     }
 }

@@ -69,6 +69,7 @@ public class WaveletTreeConstruct extends Algorithm {
         addStep(v, REL.TOP, "wtconstruct0", s);
         pause();
         createSplit(v, s);
+        WT.completed = true;
     }
 }
 
