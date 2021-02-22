@@ -3,6 +3,7 @@ package algvis.ds.wavelettree;
 import algvis.core.Algorithm;
 import algvis.core.Node;
 import algvis.core.visual.VisualElement;
+import algvis.ui.view.REL;
 
 import java.util.*;
 import java.lang.Math.*;
@@ -110,6 +111,8 @@ public class WaveletTreeHuffmanConstruct extends Algorithm {
         Map<String, Integer> charFreqs = getCharFreq(s);
         Map<String, WaveletTree> stringToTree = new HashMap<>();
 
+        addStep(WT.getRoot(), REL.TOP, "wthuff1");    // We create a node for every character from the alphabet.
+        pause();
         for (Map.Entry<String, Integer> entry : charFreqs.entrySet()) {
             WaveletTree tree = new WaveletTree(WT.panel);
             addToScene(tree);
@@ -125,15 +128,25 @@ public class WaveletTreeHuffmanConstruct extends Algorithm {
 
         WaveletTree newTree = null;
         while ( charFreqs.size() != 1 ) {
+            addStep(WT.getRoot(), REL.TOP, "wthuff2");    // Identify 2 root nodes with lowest frequency...
+            pause();
+
             Map.Entry<String, Integer> min1 = getMin(charFreqs);
             assert min1 != null;
             WaveletTree u = stringToTree.get(min1.getKey());
             stringToTree.remove(min1.getKey());
+            u.getRoot().mark();
+            pause();
 
             Map.Entry<String, Integer> min2 = getMin(charFreqs);
             assert min2 != null;
             WaveletTree v = stringToTree.get(min2.getKey());
             stringToTree.remove(min2.getKey());
+            v.getRoot().mark();
+            pause();
+
+            addStep(WT.getRoot(), REL.TOP, "wthuff3");    // ...and merge them to a tree.
+            pause();
 
             newTree = new WaveletTree(WT.panel);
             addToScene(newTree);
@@ -151,13 +164,14 @@ public class WaveletTreeHuffmanConstruct extends Algorithm {
             rootNode.setBits(createBits(s, min1.getKey(), min2.getKey()));
 
             positionTrees(new ArrayList<>(stringToTree.values()));
+            leftNode.unmark();
+            rightNode.unmark();
             pause();
         }
         removeFromScene(newTree);
         WT.setRoot(newTree.getRoot());
         WT.getRoot().reposition();
         WT.completed = true;
-        pause();
     }
 }
 

@@ -89,7 +89,7 @@ public class WaveletTree extends DataStructure {
                 .limit(20)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
-        construct(generatedString);
+        huffConstruct(generatedString);
     }
 
     @Override   // inherited from VisualElement

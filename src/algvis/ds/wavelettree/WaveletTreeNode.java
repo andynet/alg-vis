@@ -86,7 +86,12 @@ public class WaveletTreeNode extends Node {
         box_w = string.length() * char_w / 2;
         box_h = char_h;
 
-        v.setColor(Color.WHITE);
+        if (marked) {
+            v.setColor(Color.LIGHT_GRAY);
+        } else {
+            v.setColor(Color.WHITE);
+        }
+
         v.fillRoundRectangle(x, y, box_w, box_h, 6, 10);
 
         v.setColor(Color.GRAY);
